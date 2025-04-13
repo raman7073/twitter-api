@@ -230,7 +230,7 @@ export class TwitterService {
         fileName: string,
         contentType: string,
         accessToken: string,
-    ): Promise<string | { statusCode: number; message: string }> {
+    ): Promise<string> {
         try {
             // Step 0: Get user ID using the provided access token
             const userId = await this.getTwitterUserId(accessToken);
@@ -256,11 +256,8 @@ export class TwitterService {
             );
 
             if (pollStatus) return finalizeResponse.media_id_string;
+            throw new InternalServerErrorException('Media processing failed');
 
-            return {
-                statusCode: 500,
-                message: 'Twitter Error: Media processing failed',
-            };
         } catch (error) {
             throw new InternalServerErrorException('Upload failed');
         }
